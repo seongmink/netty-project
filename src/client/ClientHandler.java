@@ -5,10 +5,13 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.commons.io.IOUtils;
+import src.util.IntByteConvert;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.ByteOrder;
+import java.util.Arrays;
 
 public class ClientHandler extends ChannelHandlerAdapter {
 
@@ -18,7 +21,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
   public void channelActive(ChannelHandlerContext ctx) {
     System.out.println("Client channelActive!");
     System.out.println("클라이언트 파일 전송");
-    String filePath = "C:/test.png";
+    String filePath = "C:/test.txt";
     File file = new File(filePath);
     System.out.println(file);
     String result = "";
@@ -35,13 +38,20 @@ public class ClientHandler extends ChannelHandlerAdapter {
       result = sb.toString();
 
       String code = "FI";
-      String length = Integer.toString(result.length() + code.length());
-      byte[] arrL = length.getBytes();
-
+      int length = result.length() + code.length();
+      System.out.println(length + "<<<<<<<<<<<");
+      byte[] tmp = IntByteConvert.intToByte(length, ByteOrder.LITTLE_ENDIAN);
+      byte[] arrL = new byte[8];
+      for (int i = 0; i < tmp.length; i++) {
+        arrL[i] = tmp[i];
+      }
+      System.out.println(Arrays.toString(arrL));
+//              length.getBytes();
+      System.out.println("arrL.length = " + arrL.length);
       byte[] arrC = code.getBytes();
-
+      System.out.println("arrC.length = " + arrC.length);
       byte[] arrD = result.getBytes();
-
+      System.out.println("arrD.length = " + arrD.length);
       byte[] arrF = IOUtils.toByteArray(is);
 
       byte[] request = new byte[arrL.length + arrC.length + arrD.length + arrF.length];
