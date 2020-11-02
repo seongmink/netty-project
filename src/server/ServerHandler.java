@@ -27,13 +27,13 @@ public class ServerHandler extends ChannelHandlerAdapter {
 
 		byte[] bytes = (byte[]) msg;
 
-		// 첫 8 byte(2(구분코드) + data의 길이)
+		// 첫 8 byte( 2(구분코드) + data의 길이)
 		byte[] lengthByte = new byte[LENGTH];
 		for (int i = 0; i < LENGTH; i++) {
 			lengthByte[i] = bytes[i];
-			System.out.printf("%02X", lengthByte[i]);
+			System.out.printf("[%02X]", lengthByte[i]);
 		}
-		int dataLength = IntByteConvert.byteToInt(lengthByte, ByteOrder.LITTLE_ENDIAN) - CODE_LENGTH;
+		int dataLength = IntByteConvert.byteToInt(lengthByte, ByteOrder.LITTLE_ENDIAN);
 		System.out.println(dataLength);
 
 		// 구분 코드
