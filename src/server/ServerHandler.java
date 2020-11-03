@@ -33,7 +33,7 @@ public class ServerHandler extends ChannelHandlerAdapter {
 			lengthByte[i] = bytes[i];
 			System.out.printf("%02X", lengthByte[i]);
 		}
-		int dataLength = IntByteConvert.byteToInt(lengthByte, ByteOrder.LITTLE_ENDIAN) - CODE_LENGTH;
+		int dataLength = IntByteConvert.byteToInt(lengthByte);
 		System.out.println(dataLength);
 
 		// 구분 코드
