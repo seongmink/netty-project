@@ -8,15 +8,21 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class ServerHandler extends ChannelHandlerAdapter {
+public class ServerHandler extends SimpleChannelInboundHandler<Object> {
 
     private final int LENGTH = 8;
     private final int CODE_LENGTH = 2;
 
+//	@Override
+//	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+//			System.out.println("Server channelRead!");
+//
+//	}
+
 	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		System.out.println("Server channelRead!");
-		
+	protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+		System.out.println("Server channelRead0!");
+
 		byte[] bytes = (byte[]) msg;
 
 		// TODO : LENGTH = 첫 8 byte( 2(구분코드) + data의 길이)
@@ -36,8 +42,8 @@ public class ServerHandler extends ChannelHandlerAdapter {
 		System.out.println("code = " + code);
 
 		// TODO : DATA
-		byte[] dataByte = new byte[length];
-		for (int i = LENGTH + CODE_LENGTH; i < LENGTH + CODE_LENGTH + length; i++) {
+		byte[] dataByte = new byte[length-2];
+		for (int i = LENGTH + CODE_LENGTH; i < LENGTH + length; i++) {
 			dataByte[i-LENGTH-CODE_LENGTH] = bytes[i];
 		}
 		StringTokenizer st = new StringTokenizer(new String(dataByte), "\n");
@@ -54,19 +60,18 @@ public class ServerHandler extends ChannelHandlerAdapter {
 		System.out.println("saveDir = " + saveDir);
 
 		// TODO : 파일 저장
-
 		byte[] file = new byte[Integer.parseInt(fileSize)];
 		for (int i = LENGTH + length; i < bytes.length; i++) {
 			file[i-LENGTH-length] = bytes[i];
 		}
 
 		// TODO : Client로 result 전송
-		byte[] result = new byte[LENGTH + saveDir.length()];
+		byte[] result = new byte[LENGTH + CODE_LENGTH + saveDir.length()];
 		byte[] resultLength = String.valueOf(LENGTH + saveDir.length()).getBytes();
 		System.arraycopy(resultLength, 0, result, LENGTH - resultLength.length, resultLength.length);
 
 		byte[] resultData = saveDir.getBytes();
-		System.arraycopy(resultData, 0, result, LENGTH, resultData.length);
+		System.arraycopy(resultData, 0, result, LENGTH + CODE_LENGTH, resultData.length);
 
 		File saveFile = new File(saveDir);
 		FileOutputStream fos;
@@ -92,7 +97,7 @@ public class ServerHandler extends ChannelHandlerAdapter {
 	@Override
 	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
 		System.out.println("Server channelReadComplete!");
-		ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
+//		ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
 	}
 
 	@Override
