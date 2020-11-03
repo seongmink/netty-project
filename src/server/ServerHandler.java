@@ -42,8 +42,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<Object> {
 		System.out.println("code = " + code);
 
 		// TODO : DATA
-		byte[] dataByte = new byte[length];
-		for (int i = LENGTH + CODE_LENGTH; i < LENGTH + CODE_LENGTH + length; i++) {
+		byte[] dataByte = new byte[length-2];
+		for (int i = LENGTH + CODE_LENGTH; i < LENGTH + length; i++) {
 			dataByte[i-LENGTH-CODE_LENGTH] = bytes[i];
 		}
 		StringTokenizer st = new StringTokenizer(new String(dataByte), "\n");
