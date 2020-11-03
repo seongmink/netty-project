@@ -1,13 +1,8 @@
 package src.server;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
-import org.apache.commons.io.IOUtils;
-import src.util.IntByteConvert;
 
-import java.io.*;
-import java.nio.ByteOrder;
+import java.util.Arrays;
 
 public class ServerHandler extends ChannelHandlerAdapter {
 
@@ -19,6 +14,7 @@ public class ServerHandler extends ChannelHandlerAdapter {
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		System.out.println("Server channelRead!");
 
+		// TODO : 목표
 		// 바이트를 변환 시킴 ( length / 구분코드 / data / file )
 		// length = 8 byte( 2(구분코드) + data의 길이)
 		// 구분코드 = FI
@@ -27,30 +23,40 @@ public class ServerHandler extends ChannelHandlerAdapter {
 
 		byte[] bytes = (byte[]) msg;
 
-		// 첫 8 byte(2(구분코드) + data의 길이)
+		// TODO : LENGTH = 첫 8 byte( 2(구분코드) + data의 길이)
 		byte[] lengthByte = new byte[LENGTH];
 		for (int i = 0; i < LENGTH; i++) {
 			lengthByte[i] = bytes[i];
-			System.out.printf("%02X", lengthByte[i]);
+			System.out.println(bytes[i]);
 		}
-		int dataLength = IntByteConvert.byteToInt(lengthByte);
-		System.out.println(dataLength);
 
-		// 구분 코드
+		// TODO : 구분 코드
 		byte[] codeByte = new byte[CODE.length()];
 		for (int i = LENGTH; i < LENGTH + CODE_LENGTH; i++) {
 			codeByte[i-LENGTH] = bytes[i];
 		}
-		System.out.println("codeByte = " + codeByte);
+		System.out.println("codeByte = " + Arrays.toString(codeByte));
 
-		// data
-		byte[] data = new byte[dataLength];
-		for (int i = LENGTH + CODE_LENGTH; i < data.length; i++) {
-			data[i-LENGTH-CODE_LENGTH] = bytes[i];
-		}
+		// TODO : DATA 수정
+//		byte[] dataByte = new byte[dataLength];
+//		for (int i = LENGTH + CODE_LENGTH; i < dataByte.length; i++) {
+//			dataByte[i-LENGTH-CODE_LENGTH] = bytes[i];
+//		}
+//
+//		String data = new String(dataByte);
+//		StringTokenizer st = new StringTokenizer(data, "\n");
+//
+//		String cmd = st.nextToken().split("=")[1];
+//		String fileName = st.nextToken().split("=")[1];
+//		String orgFileName = st.nextToken().split("=")[1];
+//		String fileSize = st.nextToken().split("=")[1];
+//		String saveDir = st.nextToken().split("=")[1];
 
-		System.out.println("data = " + data.toString());
+		// TODO : 파일 저장하는 로직
 
+//
+//		System.out.println("data = " + data.toString());
+//
 //        ByteBuf in = (ByteBuf) msg;
 //        byte[] b = new byte[in.readableBytes()];
 //        in.getBytes(0, b, 0, in.readableBytes());
