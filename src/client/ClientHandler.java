@@ -29,43 +29,39 @@ public class ClientHandler extends ChannelHandlerAdapter {
     try {
       is = new FileInputStream(file);
 
-      // DATA 생성
+      // TODO: DATA 생성
       sb.append("CMD:=C\n")
               .append("FILENAME:=").append(file.getName()).append("\n")
               .append("ORGFILENAME:=").append(file.getName()).append("\n")
               .append("FILESIZE:=").append(file.length()).append("\n")
-              .append("SAVE_DIR:=").append(file.getAbsolutePath()).append("\n");
+              .append("SAVE_DIR:=").append("C:/Temp/test3.txt").append("\n");
       result = sb.toString();
 
       String code = "FI";
 
       String length = Integer.toString(result.length() + code.length());
-      // 고정 8bytes Length
+      // TODO: 고정 8bytes Length
       byte[] arrL = new byte[8];
       byte[] tmpL = length.getBytes();
       System.arraycopy(tmpL, 0, arrL, arrL.length - tmpL.length, tmpL.length);
       System.out.println(Arrays.toString(arrL));
-      System.out.println("arrL.length = " + arrL.length);
 
-      // 구분코드 2bytes
+      // TODO: 구분코드 2bytes
       byte[] arrC = code.getBytes();
-      System.out.println("arrC.length = " + arrC.length);
 
-      // Data
+      // TODO: Data
       byte[] arrD = result.getBytes();
-      System.out.println("arrD.length = " + arrD.length);
 
-      // File
+      // TODO: File
       byte[] arrF = IOUtils.toByteArray(is);
 
-      // 생성된 byte 배열 병합
+      // TODO: 생성된 byte 배열 병합
       byte[] request = new byte[arrL.length + arrC.length + arrD.length + arrF.length];
       System.arraycopy(arrL, 0, request, 0, arrL.length);
       System.arraycopy(arrC, 0, request, arrL.length, arrC.length);
       System.arraycopy(arrD, 0, request, arrL.length + arrC.length, arrD.length);
       System.arraycopy(arrF, 0, request, arrL.length + arrC.length + arrD.length, arrF.length);
       ByteBuf byteBuf = Unpooled.wrappedBuffer(request);
-
 
       // 내부적으로 데이터 기록과 전송의 두 가지 메서드 호출
       // write : 채널에 데이터를 기록
@@ -82,7 +78,28 @@ public class ClientHandler extends ChannelHandlerAdapter {
     System.out.println("Client channelRead!");
     byte[] bytes = (byte[]) msg;
 
-    System.out.println(new String(bytes));
+    // 앞 8bytes 의 데이터 길이
+    String length = "";
+    for (int i = 0; i < 8; i++) {
+      if((char) bytes[i] != 0) {
+        length += (char) bytes[i];
+      }
+    }
+    System.out.println("Length : " + length);
+
+
+    // 구분코드 출력
+    byte[] code = {bytes[8], bytes[9]};
+    System.out.println("구분코드 : " + new String(code));
+
+
+    // 데이터 출력
+    int tmp = Integer.parseInt(length) - 2;
+    byte[] data = new byte[tmp];
+    for (int i = 0; i < tmp; i++) {
+      data[i] = bytes[i+10];
+    }
+    System.out.println("Data : " + new String(data));
   }
 
   @Override

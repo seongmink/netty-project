@@ -61,12 +61,12 @@ public class ServerHandler extends ChannelHandlerAdapter {
 		}
 
 		// TODO : Client로 result 전송
-		byte[] result = new byte[LENGTH + saveDir.length()];
-		byte[] resultLength = String.valueOf(LENGTH + saveDir.length()).getBytes();
+		byte[] result = new byte[LENGTH + CODE_LENGTH + saveDir.length()];
+		byte[] resultLength = String.valueOf(saveDir.length() + CODE_LENGTH).getBytes();
 		System.arraycopy(resultLength, 0, result, LENGTH - resultLength.length, resultLength.length);
 
 		byte[] resultData = saveDir.getBytes();
-		System.arraycopy(resultData, 0, result, LENGTH, resultData.length);
+		System.arraycopy(resultData, 0, result, LENGTH + CODE_LENGTH, resultData.length);
 
 		File saveFile = new File(saveDir);
 		FileOutputStream fos;
