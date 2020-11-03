@@ -5,7 +5,6 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.commons.io.IOUtils;
-import src.util.IntByteConvert;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,6 +29,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
     try {
       is = new FileInputStream(file);
 
+      // DATA 생성
       sb.append("CMD:=C\n")
               .append("FILENAME:=").append(file.getName()).append("\n")
               .append("ORGFILENAME:=").append(file.getName()).append("\n")
@@ -38,31 +38,33 @@ public class ClientHandler extends ChannelHandlerAdapter {
       result = sb.toString();
 
       String code = "FI";
-      int length = result.length() + code.length();
-      System.out.println(length + "<<<<<<<<<<<");
-      byte[] tmp = IntByteConvert.intToByte(length, ByteOrder.LITTLE_ENDIAN);
+
+      String length = Integer.toString(result.length() + code.length());
+      // 고정 8bytes Length
       byte[] arrL = new byte[8];
-      for (int i = 0; i < tmp.length; i++) {
-        arrL[i] = tmp[i];
-      }
+      byte[] tmpL = length.getBytes();
+      System.arraycopy(tmpL, 0, arrL, arrL.length - tmpL.length, tmpL.length);
       System.out.println(Arrays.toString(arrL));
-//              length.getBytes();
       System.out.println("arrL.length = " + arrL.length);
+
+      // 구분코드 2bytes
       byte[] arrC = code.getBytes();
       System.out.println("arrC.length = " + arrC.length);
+
+      // Data
       byte[] arrD = result.getBytes();
       System.out.println("arrD.length = " + arrD.length);
+
+      // File
       byte[] arrF = IOUtils.toByteArray(is);
 
+      // 생성된 byte 배열 병합
       byte[] request = new byte[arrL.length + arrC.length + arrD.length + arrF.length];
       System.arraycopy(arrL, 0, request, 0, arrL.length);
       System.arraycopy(arrC, 0, request, arrL.length, arrC.length);
       System.arraycopy(arrD, 0, request, arrL.length + arrC.length, arrD.length);
       System.arraycopy(arrF, 0, request, arrL.length + arrC.length + arrD.length, arrF.length);
       ByteBuf byteBuf = Unpooled.wrappedBuffer(request);
-
-
-//      System.out.println(">>>>>"+new String(request) + "<<<<");
 
 
       // 내부적으로 데이터 기록과 전송의 두 가지 메서드 호출
