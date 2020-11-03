@@ -4,6 +4,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -12,7 +14,7 @@ import java.io.InputStream;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 
-public class ClientHandler extends ChannelHandlerAdapter {
+public class ClientHandler extends SimpleChannelInboundHandler<Object> {
 
   // ChannelboundHandler에 정의된 이벤트
   // 소켓 채널이 최초 활성화 되었을 때 실행
@@ -20,7 +22,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
   public void channelActive(ChannelHandlerContext ctx) {
     System.out.println("Client channelActive!");
     System.out.println("클라이언트 파일 전송");
-    String filePath = "C:/test.txt";
+    String filePath = "C:/test.jpg";
     File file = new File(filePath);
     System.out.println(file);
     String result = "";
@@ -34,7 +36,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
               .append("FILENAME:=").append(file.getName()).append("\n")
               .append("ORGFILENAME:=").append(file.getName()).append("\n")
               .append("FILESIZE:=").append(file.length()).append("\n")
-              .append("SAVE_DIR:=").append(file.getAbsolutePath()).append("\n");
+              .append("SAVE_DIR:=").append("C:/dir/test.jpg").append("\n");
       result = sb.toString();
 
       String code = "FI";
@@ -76,9 +78,19 @@ public class ClientHandler extends ChannelHandlerAdapter {
     }
   }
 
+
+
   // 서버로부터 수신된 데이터가 있을 때 호출
+//  @Override
+//  public void channelRead(ChannelHandlerContext ctx, Object msg) {
+//    System.out.println("Client channelRead!");
+//    byte[] bytes = (byte[]) msg;
+//
+//    System.out.println(new String(bytes));
+//  }
+
   @Override
-  public void channelRead(ChannelHandlerContext ctx, Object msg) {
+  protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
     System.out.println("Client channelRead!");
     byte[] bytes = (byte[]) msg;
 
