@@ -16,8 +16,8 @@ public class ServerHandler extends ChannelHandlerAdapter {
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		System.out.println("Server channelRead!");
-		
 		byte[] bytes = (byte[]) msg;
+//		System.out.println(new String(bytes));
 
 		// TODO : LENGTH = 첫 8 byte( 2(구분코드) + data의 길이)
 		String lengthTemp = "";
@@ -36,8 +36,8 @@ public class ServerHandler extends ChannelHandlerAdapter {
 		System.out.println("code = " + code);
 
 		// TODO : DATA
-		byte[] dataByte = new byte[length];
-		for (int i = LENGTH + CODE_LENGTH; i < LENGTH + CODE_LENGTH + length; i++) {
+		byte[] dataByte = new byte[length-2];
+		for (int i = LENGTH + CODE_LENGTH; i < LENGTH + length; i++) {
 			dataByte[i-LENGTH-CODE_LENGTH] = bytes[i];
 		}
 		StringTokenizer st = new StringTokenizer(new String(dataByte), "\n");
@@ -84,8 +84,9 @@ public class ServerHandler extends ChannelHandlerAdapter {
 			e.printStackTrace();
 		} finally {
 			ByteBuf byteBuf = Unpooled.wrappedBuffer(result);
+//			System.out.println("Arrays.toString(byteBuf.array()) = " + Arrays.toString(byteBuf.array()));
 			ctx.writeAndFlush(byteBuf);
-			System.out.println("Arrays.toString(result) = " + Arrays.toString(result));
+//			System.out.println("Arrays.toString(result) = " + Arrays.toString(result));
 		}
 	}
 

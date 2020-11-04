@@ -20,7 +20,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
   public void channelActive(ChannelHandlerContext ctx) {
     System.out.println("Client channelActive!");
     System.out.println("클라이언트 파일 전송");
-    String filePath = "C:/test.txt";
+    String filePath = "C:/test.png";
     File file = new File(filePath);
     System.out.println(file);
     String result = "";
@@ -34,7 +34,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
               .append("FILENAME:=").append(file.getName()).append("\n")
               .append("ORGFILENAME:=").append(file.getName()).append("\n")
               .append("FILESIZE:=").append(file.length()).append("\n")
-              .append("SAVE_DIR:=").append("C:/Temp/test3.txt").append("\n");
+              .append("SAVE_DIR:=").append("C:/Temp/test4123215.png").append("\n");
       result = sb.toString();
 
       String code = "FI";
