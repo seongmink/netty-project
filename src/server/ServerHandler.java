@@ -22,8 +22,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<Object> {
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
 		System.out.println("Server channelRead0!");
-
 		byte[] bytes = (byte[]) msg;
+//		System.out.println(new String(bytes));
 
 		// TODO : LENGTH = 첫 8 byte( 2(구분코드) + data의 길이)
 		String lengthTemp = "";
@@ -89,8 +89,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<Object> {
 			e.printStackTrace();
 		} finally {
 			ByteBuf byteBuf = Unpooled.wrappedBuffer(result);
+//			System.out.println("Arrays.toString(byteBuf.array()) = " + Arrays.toString(byteBuf.array()));
 			ctx.writeAndFlush(byteBuf);
-			System.out.println("Arrays.toString(result) = " + Arrays.toString(result));
+//			System.out.println("Arrays.toString(result) = " + Arrays.toString(result));
 		}
 	}
 
