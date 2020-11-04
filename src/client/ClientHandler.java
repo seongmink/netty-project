@@ -4,6 +4,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -12,7 +14,7 @@ import java.io.InputStream;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 
-public class ClientHandler extends ChannelHandlerAdapter {
+public class ClientHandler extends SimpleChannelInboundHandler<Object> {
 
   // ChannelboundHandler에 정의된 이벤트
   // 소켓 채널이 최초 활성화 되었을 때 실행
@@ -72,9 +74,19 @@ public class ClientHandler extends ChannelHandlerAdapter {
     }
   }
 
+
+
   // 서버로부터 수신된 데이터가 있을 때 호출
+//  @Override
+//  public void channelRead(ChannelHandlerContext ctx, Object msg) {
+//    System.out.println("Client channelRead!");
+//    byte[] bytes = (byte[]) msg;
+//
+//    System.out.println(new String(bytes));
+//  }
+
   @Override
-  public void channelRead(ChannelHandlerContext ctx, Object msg) {
+  protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
     System.out.println("Client channelRead!");
     byte[] bytes = (byte[]) msg;
 
