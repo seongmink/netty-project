@@ -16,7 +16,6 @@ public class ClientHandler extends ChannelHandlerAdapter {
 
   // ChannelboundHandler에 정의된 이벤트
   // 소켓 채널이 최초 활성화 되었을 때 실행
-
   @Override
   public void channelActive(ChannelHandlerContext ctx) {
     System.out.println("Client channelActive!");
@@ -35,7 +34,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
               .append("FILENAME:=").append(file.getName()).append("\n")
               .append("ORGFILENAME:=").append(file.getName()).append("\n")
               .append("FILESIZE:=").append(file.length()).append("\n")
-              .append("SAVE_DIR:=").append("C:/daki2.exe").append("\n");
+              .append("SAVE_DIR:=").append("C:/test4123215.exe").append("\n");
       result = sb.toString();
 
       String code = "FI";
@@ -73,34 +72,35 @@ public class ClientHandler extends ChannelHandlerAdapter {
     }
   }
 
-
-
   // 서버로부터 수신된 데이터가 있을 때 호출
-//  @Override
-//  public void channelRead(ChannelHandlerContext ctx, Object msg) {
-//    System.out.println("Client channelRead!");
-//    byte[] bytes = (byte[]) msg;
-//
-//    System.out.println(new String(bytes));
-//  }
-
   @Override
-  public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+  public void channelRead(ChannelHandlerContext ctx, Object msg) {
     System.out.println("Client channelRead!");
-    byte[] bytes = (byte[]) msg;
+//    byte[] bytes = (byte[]) msg;
+    System.out.println("msg.toString() = " + msg.toString());
+    ByteBuf buf = (ByteBuf) msg;
+    System.out.println("buf.toString() = " + buf.toString());
 
     // 앞 8bytes 의 데이터 길이
     String length = "";
     for (int i = 0; i < 8; i++) {
-      if((char) bytes[i] != 0) {
-        length += (char) bytes[i];
+      int chk = buf.readByte();
+      if(chk != 0) {
+        length += (char) chk;
       }
+//      if((char) bytes[i] != 0) {
+//        length += (char) bytes[i];
+//      }
     }
     System.out.println("Length : " + length);
 
 
     // 구분코드 출력
-    byte[] code = {bytes[8], bytes[9]};
+//    byte[] code = {bytes[8], bytes[9]};
+    byte[] code = new byte[2];
+    for (int i = 0; i < 2; i++) {
+      code[i] = buf.readByte();
+    }
     System.out.println("구분코드 : " + new String(code));
 
 
@@ -108,7 +108,8 @@ public class ClientHandler extends ChannelHandlerAdapter {
     int tmp = Integer.parseInt(length) - 2;
     byte[] data = new byte[tmp];
     for (int i = 0; i < tmp; i++) {
-      data[i] = bytes[i+10];
+      data[i] = buf.readByte();
+//      data[i] = bytes[i+10];
     }
     System.out.println("Data : " + new String(data));
   }
