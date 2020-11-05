@@ -55,8 +55,6 @@ public class DaouDecoder extends ByteToMessageDecoder {
 //            in.getBytes(0, msg);
 //        }
 //        out.add(msg);
-//
-//        in.clear();
 
         in.resetReaderIndex();
         out.add(in.copy());

@@ -17,22 +17,19 @@ public class ServerHandler extends ChannelHandlerAdapter {
 		System.out.println("Server channelRead!");
 
 		ByteBuf buf = (ByteBuf) msg;
-		System.out.println("buf.toString() = " + buf.toString());
 
 		// TODO : LENGTH = 첫 8 byte( 2(구분코드) + data의 길이)
 		String lengthTemp = "";
 		for (int i = 0; i < LENGTH; i++) {
-			char nowByte = (char) buf.readByte();
-			if(nowByte != 0)
-				lengthTemp +=  nowByte;
+			lengthTemp += (char) buf.readByte();
 		}
-		int dataLength = Integer.parseInt(lengthTemp) - 2;
+		int dataLength = Integer.parseInt(lengthTemp.trim()) - 2;
 		System.out.println("length = " + dataLength);
 
 		// TODO : 구분 코드
 		String code = "";
 		for (int i = 0; i < CODE_LENGTH; i++) {
-			code += (char) buf.readByte();
+			code += buf.readChar();
 		}
 		System.out.println("code = " + code);
 
