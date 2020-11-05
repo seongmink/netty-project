@@ -16,28 +16,27 @@ public class ServerHandler extends ChannelHandlerAdapter {
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		System.out.println("Server channelRead!");
 
-		byte[] bytes = (byte[]) msg;
+		ByteBuf buf = (ByteBuf) msg;
 
 		// TODO : LENGTH = 첫 8 byte( 2(구분코드) + data의 길이)
 		String lengthTemp = "";
 		for (int i = 0; i < LENGTH; i++) {
-			if((char) bytes[i] != 0)
-				lengthTemp += (char) bytes[i];
+			lengthTemp += (char) buf.readByte();
 		}
-		int dataLength = Integer.parseInt(lengthTemp) - 2;
+		int dataLength = Integer.parseInt(lengthTemp.trim()) - 2;
 		System.out.println("length = " + dataLength);
 
 		// TODO : 구분 코드
 		String code = "";
-		for (int i = LENGTH; i < LENGTH + CODE_LENGTH; i++) {
-			code += (char) bytes[i];
+		for (int i = 0; i < CODE_LENGTH; i++) {
+			code += buf.readChar();
 		}
 		System.out.println("code = " + code);
 
 		// TODO : DATA
 		byte[] dataByte = new byte[dataLength];
-		for (int i = LENGTH + CODE_LENGTH; i < LENGTH + CODE_LENGTH + dataLength; i++) {
-			dataByte[i-LENGTH-CODE_LENGTH] = bytes[i];
+		for (int i = 0; i < dataLength; i++) {
+			dataByte[i] = buf.readByte();
 		}
 		StringTokenizer st = new StringTokenizer(new String(dataByte), "\n");
 
@@ -53,9 +52,10 @@ public class ServerHandler extends ChannelHandlerAdapter {
 		System.out.println("saveDir = " + saveDir);
 
 		// TODO : 파일 저장
-		byte[] file = new byte[Integer.parseInt(fileSize)];
-		for (int i = LENGTH + CODE_LENGTH + dataLength; i < bytes.length; i++) {
-			file[i-LENGTH-CODE_LENGTH-dataLength] = bytes[i];
+		int size = buf.readableBytes();
+		byte[] file = new byte[size];
+		for (int i = 0; i < size; i++) {
+			file[i] = buf.readByte();
 		}
 
 		// TODO : Client로 result 전송
