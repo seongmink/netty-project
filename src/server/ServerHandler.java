@@ -29,7 +29,7 @@ public class ServerHandler extends ChannelHandlerAdapter {
 		// TODO : 구분 코드
 		String code = "";
 		for (int i = 0; i < CODE_LENGTH; i++) {
-			code += buf.readChar();
+			code += (char) buf.readByte();
 		}
 		System.out.println("code = " + code);
 
@@ -59,12 +59,8 @@ public class ServerHandler extends ChannelHandlerAdapter {
 		}
 
 		// TODO : Client로 result 전송
-		byte[] result = new byte[LENGTH + CODE_LENGTH + saveDir.length()];
-		byte[] resultLength = String.valueOf(saveDir.length() + CODE_LENGTH).getBytes();
-		System.arraycopy(resultLength, 0, result, LENGTH - resultLength.length, resultLength.length);
-
-		byte[] resultData = saveDir.getBytes();
-		System.arraycopy(resultData, 0, result, LENGTH + CODE_LENGTH, resultData.length);
+		byte[] result = null;
+		int resultLength = 0;
 
 		File saveFile = new File(saveDir);
 		FileOutputStream fos;
@@ -74,11 +70,30 @@ public class ServerHandler extends ChannelHandlerAdapter {
 			fos.write(file);
 			fos.close();
 
+			byte[] resultLengthByte = String.valueOf(CODE_LENGTH + saveDir.length()).getBytes();
+			byte[] resultData = saveDir.getBytes();
+			resultLength = LENGTH + CODE_LENGTH + saveDir.length();
+			result = new byte[resultLength];
+
 			result[8] = 'O';
 			result[9] = 'K';
+			System.arraycopy(resultLengthByte, 0, result, LENGTH - resultLengthByte.length, resultLengthByte.length);
+			System.arraycopy(resultData, 0, result, LENGTH + CODE_LENGTH, resultData.length);
 		} catch (Exception e) {
+
+			String exception = e.toString();
+			String exceptionName = exception.split("\\(")[0];
+			String description = exception.substring(exception.lastIndexOf('(') + 1, exception.length() - 1);
+
+			byte[] resultLengthByte = String.valueOf(CODE_LENGTH + exceptionName.length() + description.getBytes().length).getBytes();
+			byte[] resultData = (exceptionName + description).getBytes();
+			resultLength = LENGTH + CODE_LENGTH + resultData.length;
+			result = new byte[resultLength];
+
 			result[8] = 'N';
 			result[9] = 'O';
+			System.arraycopy(resultLengthByte, 0, result, LENGTH - resultLengthByte.length, resultLengthByte.length);
+			System.arraycopy(resultData, 0, result, LENGTH + CODE_LENGTH, resultData.length);
 			e.printStackTrace();
 		} finally {
 			ByteBuf byteBuf = Unpooled.wrappedBuffer(result);
