@@ -8,22 +8,15 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class ServerHandler extends SimpleChannelInboundHandler<Object> {
-
+public class ServerHandler extends ChannelHandlerAdapter {
     private final int LENGTH = 8;
     private final int CODE_LENGTH = 2;
 
-//	@Override
-//	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-//			System.out.println("Server channelRead!");
-//
-//	}
-
 	@Override
-	protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-		System.out.println("Server channelRead0!");
+	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+		System.out.println("Server channelRead!");
+
 		byte[] bytes = (byte[]) msg;
-//		System.out.println(new String(bytes));
 
 		// TODO : LENGTH = 첫 8 byte( 2(구분코드) + data의 길이)
 		String lengthTemp = "";
@@ -31,8 +24,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<Object> {
 			if((char) bytes[i] != 0)
 				lengthTemp += (char) bytes[i];
 		}
-		int length = Integer.parseInt(lengthTemp);
-		System.out.println("length = " + length);
+		int dataLength = Integer.parseInt(lengthTemp) - 2;
+		System.out.println("length = " + dataLength);
 
 		// TODO : 구분 코드
 		String code = "";
@@ -42,8 +35,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<Object> {
 		System.out.println("code = " + code);
 
 		// TODO : DATA
-		byte[] dataByte = new byte[length-2];
-		for (int i = LENGTH + CODE_LENGTH; i < LENGTH + length; i++) {
+		byte[] dataByte = new byte[dataLength];
+		for (int i = LENGTH + CODE_LENGTH; i < LENGTH + CODE_LENGTH + dataLength; i++) {
 			dataByte[i-LENGTH-CODE_LENGTH] = bytes[i];
 		}
 		StringTokenizer st = new StringTokenizer(new String(dataByte), "\n");
@@ -61,8 +54,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<Object> {
 
 		// TODO : 파일 저장
 		byte[] file = new byte[Integer.parseInt(fileSize)];
-		for (int i = LENGTH + length; i < bytes.length; i++) {
-			file[i-LENGTH-length] = bytes[i];
+		for (int i = LENGTH + CODE_LENGTH + dataLength; i < bytes.length; i++) {
+			file[i-LENGTH-CODE_LENGTH-dataLength] = bytes[i];
 		}
 
 		// TODO : Client로 result 전송
@@ -89,16 +82,14 @@ public class ServerHandler extends SimpleChannelInboundHandler<Object> {
 			e.printStackTrace();
 		} finally {
 			ByteBuf byteBuf = Unpooled.wrappedBuffer(result);
-//			System.out.println("Arrays.toString(byteBuf.array()) = " + Arrays.toString(byteBuf.array()));
 			ctx.writeAndFlush(byteBuf);
-//			System.out.println("Arrays.toString(result) = " + Arrays.toString(result));
 		}
 	}
 
 	@Override
 	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
 		System.out.println("Server channelReadComplete!");
-//		ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
+		ctx.writeAndFlush(Unpooled.EMPTY_BUFFER);
 	}
 
 	@Override

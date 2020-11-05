@@ -4,8 +4,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.SimpleChannelInboundHandler;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -14,15 +12,16 @@ import java.io.InputStream;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 
-public class ClientHandler extends SimpleChannelInboundHandler<Object> {
+public class ClientHandler extends ChannelHandlerAdapter {
 
   // ChannelboundHandler에 정의된 이벤트
   // 소켓 채널이 최초 활성화 되었을 때 실행
+
   @Override
   public void channelActive(ChannelHandlerContext ctx) {
     System.out.println("Client channelActive!");
     System.out.println("클라이언트 파일 전송");
-    String filePath = "C:/test.png";
+    String filePath = "C:/daki.exe";
     File file = new File(filePath);
     System.out.println(file);
     String result = "";
@@ -36,7 +35,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<Object> {
               .append("FILENAME:=").append(file.getName()).append("\n")
               .append("ORGFILENAME:=").append(file.getName()).append("\n")
               .append("FILESIZE:=").append(file.length()).append("\n")
-              .append("SAVE_DIR:=").append("C:/Temp/test4123215.png").append("\n");
+              .append("SAVE_DIR:=").append("C:/daki2.exe").append("\n");
       result = sb.toString();
 
       String code = "FI";
@@ -86,7 +85,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<Object> {
 //  }
 
   @Override
-  protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+  public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
     System.out.println("Client channelRead!");
     byte[] bytes = (byte[]) msg;
 
