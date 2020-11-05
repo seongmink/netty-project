@@ -48,6 +48,7 @@ public class DaouDecoder extends ByteToMessageDecoder {
         }
 
         byte[] msg;
+        in.resetReaderIndex();
         if(in.hasArray()) { // heap 버퍼일 경우
             msg = in.array();
         } else { // direct 버퍼일 경우(네티 4.1부터 기본 버퍼타입이 direct)
