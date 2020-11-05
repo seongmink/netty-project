@@ -9,7 +9,6 @@ import org.apache.commons.io.IOUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.nio.ByteOrder;
 import java.util.Arrays;
 
 public class ClientHandler extends ChannelHandlerAdapter {
@@ -20,9 +19,13 @@ public class ClientHandler extends ChannelHandlerAdapter {
   public void channelActive(ChannelHandlerContext ctx) {
     System.out.println("Client channelActive!");
     System.out.println("클라이언트 파일 전송");
-    String filePath = "C:/daki.exe";
+    String filePath = "C:/test4123215.exe";
     File file = new File(filePath);
-    System.out.println(file);
+
+    if(file.length() == 0) {
+      System.out.println("해당 파일이 없습니다.");
+      return;
+    }
     String result = "";
     StringBuilder sb = new StringBuilder();
     InputStream is = null;
@@ -34,7 +37,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
               .append("FILENAME:=").append(file.getName()).append("\n")
               .append("ORGFILENAME:=").append(file.getName()).append("\n")
               .append("FILESIZE:=").append(file.length()).append("\n")
-              .append("SAVE_DIR:=").append("C:/test4123215.exe").append("\n");
+              .append("SAVE_DIR:=").append("C:/test412321a5.exe").append("\n");
       result = sb.toString();
 
       String code = "FI";
@@ -68,7 +71,10 @@ public class ClientHandler extends ChannelHandlerAdapter {
       // flush : 채널에 기록된 데이터를 서버로 전송
       ctx.writeAndFlush(byteBuf);
     } catch (Exception e) {
-      e.printStackTrace();
+      int idx = e.toString().lastIndexOf('(');
+      String tmpE = e.toString().split(":")[0];
+      String exception = e.toString().substring(idx);
+      System.out.println(tmpE + " " + exception);
     }
   }
 
@@ -76,11 +82,12 @@ public class ClientHandler extends ChannelHandlerAdapter {
   @Override
   public void channelRead(ChannelHandlerContext ctx, Object msg) {
     System.out.println("Client channelRead!");
-//    byte[] bytes = (byte[]) msg;
-    System.out.println("msg.toString() = " + msg.toString());
-    ByteBuf buf = (ByteBuf) msg;
-    System.out.println("buf.toString() = " + buf.toString());
+    byte[] bytes = (byte[]) msg;
+    ByteBuf buf = Unpooled.wrappedBuffer(bytes);
 
+    if (bytes.length < 10) {
+      System.out.println("서버의 응답 형식이 잘못되었습니다.");
+    }
     // 앞 8bytes 의 데이터 길이
     String length = "";
     for (int i = 0; i < 8; i++) {
