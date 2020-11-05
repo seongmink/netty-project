@@ -47,16 +47,19 @@ public class DaouDecoder extends ByteToMessageDecoder {
             return;
         }
 
-        byte[] msg;
-        in.resetReaderIndex();
-        if(in.hasArray()) { // heap 버퍼일 경우
-            msg = in.array();
-        } else { // direct 버퍼일 경우(네티 4.1부터 기본 버퍼타입이 direct)
-            msg = new byte[in.readableBytes()];
-            in.getBytes(0, msg);
-        }
+//        byte[] msg;
+//        if(in.hasArray()) { // heap 버퍼일 경우
+//            msg = in.array();
+//        } else { // direct 버퍼일 경우(네티 4.1부터 기본 버퍼타입이 direct)
+//            msg = new byte[in.readableBytes()];
+//            in.getBytes(0, msg);
+//        }
+//        out.add(msg);
+//
+//        in.clear();
 
+        in.resetReaderIndex();
+        out.add(in.copy());
         in.clear();
-        out.add(msg);
     }
 }
