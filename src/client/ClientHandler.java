@@ -19,7 +19,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
   public void channelActive(ChannelHandlerContext ctx) {
     System.out.println("Client channelActive!");
     System.out.println("클라이언트 파일 전송");
-    String filePath = "C:/test4123215.exe";
+    String filePath = "C:/daki.exe";
     File file = new File(filePath);
 
     if(file.length() == 0) {
@@ -37,7 +37,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
               .append("FILENAME:=").append(file.getName()).append("\n")
               .append("ORGFILENAME:=").append(file.getName()).append("\n")
               .append("FILESIZE:=").append(file.length()).append("\n")
-              .append("SAVE_DIR:=").append("C:/test412321a5.exe").append("\n");
+              .append("SAVE_DIR:=").append("C:/copyed_daki.exe").append("\n");
       result = sb.toString();
 
       String code = "FI";
@@ -47,7 +47,6 @@ public class ClientHandler extends ChannelHandlerAdapter {
       byte[] arrL = new byte[8];
       byte[] tmpL = length.getBytes();
       System.arraycopy(tmpL, 0, arrL, arrL.length - tmpL.length, tmpL.length);
-      System.out.println(Arrays.toString(arrL));
 
       // TODO: 구분코드 2bytes
       byte[] arrC = code.getBytes();
@@ -100,7 +99,6 @@ public class ClientHandler extends ChannelHandlerAdapter {
 //      }
     }
     System.out.println("Length : " + length);
-
 
     // 구분코드 출력
 //    byte[] code = {bytes[8], bytes[9]};
