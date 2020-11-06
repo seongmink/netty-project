@@ -97,7 +97,6 @@ public class ServerHandler extends ChannelHandlerAdapter {
 			e.printStackTrace();
 		} finally {
 			ByteBuf byteBuf = Unpooled.wrappedBuffer(result);
-			System.out.println("byteBuf.toString() = " + byteBuf.toString());
 			ctx.writeAndFlush(byteBuf);
 		}
 	}
