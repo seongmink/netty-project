@@ -57,7 +57,7 @@ Netty의 각 Channel은 위의 그림과 설명에서 말했듯이 개별 이벤
 
 위의 이벤트 루프 모델을 잘 살펴보면 Netty를 이용하여 개발 할 때 주의해야할 점이 한 가지 있다. 바로 이벤트 루프 스레드가 blocking되면 안되는 것이다. 이벤트 루프 스레드가 blocking되어 버리면 해당 이벤트 루프에 등록된 Channel들에서 발생한 이벤트들이 제때 처리되지못하고 요청들이 밀려버리는 상황이 발생한다. Netty는 이벤트들을 처리하기 위해 ChannelPipeline에 여러 ChannelHandler를 등록하고 이 ChannelHandler들을 chaining하여 이벤트들이 처리된다.
 
-Netty는 이벤트 루프가 blocking되지 않게 blocking구간이 있는 ChannelHandler를 다음과 같이 별도의 EventExecutor에서 실행될 수 있도록 지원한다.
+Netty는 이벤트 루프가 blocking되지 않게 blocking구간이 있는 ChannelHandler를 별도의 EventExecutor에서 실행될 수 있도록 지원한다.
 
 ## ***ChannelFuture***
 
