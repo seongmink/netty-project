@@ -1,16 +1,18 @@
-package src.client;
+package client;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.util.ReferenceCounted;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
-
+@Slf4j
 public class ClientHandler extends ChannelHandlerAdapter {
 
   // ChannelboundHandler에 정의된 이벤트
@@ -19,11 +21,11 @@ public class ClientHandler extends ChannelHandlerAdapter {
   public void channelActive(ChannelHandlerContext ctx) {
     System.out.println("Client channelActive!");
     System.out.println("클라이언트 파일 전송");
-    String filePath = "C:/test4123215.exe";
+    String filePath = "C:/test412321123125.exe";
     File file = new File(filePath);
-
     if(file.length() == 0) {
       System.out.println("해당 파일이 없습니다.");
+      
       return;
     }
     String result = "";
@@ -37,7 +39,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
               .append("FILENAME:=").append(file.getName()).append("\n")
               .append("ORGFILENAME:=").append(file.getName()).append("\n")
               .append("FILESIZE:=").append(file.length()).append("\n")
-              .append("SAVE_DIR:=").append("C:/test412321a5.exe").append("\n");
+              .append("SAVE_DIR:=").append("C:/test4123215.exe").append("\n");
       result = sb.toString();
 
       String code = "FI";
@@ -84,8 +86,9 @@ public class ClientHandler extends ChannelHandlerAdapter {
     System.out.println("Client channelRead!");
     byte[] bytes = (byte[]) msg;
     ByteBuf buf = Unpooled.wrappedBuffer(bytes);
-
+//      ByteBuf buf = (ByteBuf) msg;
     if (bytes.length < 10) {
+
       System.out.println("서버의 응답 형식이 잘못되었습니다.");
     }
     // 앞 8bytes 의 데이터 길이

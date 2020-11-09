@@ -1,4 +1,4 @@
-package src.server;
+package server;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

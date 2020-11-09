@@ -1,4 +1,4 @@
-package src.client;
+package client;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -11,8 +11,8 @@ public class ClientInitializer extends ChannelInitializer<SocketChannel> {
   protected void initChannel(SocketChannel ch) throws Exception {
     ChannelPipeline p = ch.pipeline();
     p.addLast(new ByteArrayDecoder());
-    p.addLast(new ByteArrayEncoder());
     p.addLast(new ClientHandler());
+    p.addLast(new ByteArrayEncoder());
   }
 
 }

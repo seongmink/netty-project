@@ -1,4 +1,4 @@
-package src.server;
+package server;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -12,6 +12,8 @@ public class DaouDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
+
+        in.resetReaderIndex();
 
         if(!in.isReadable() || in.readableBytes() < LENGTH)
             return;
@@ -57,7 +59,12 @@ public class DaouDecoder extends ByteToMessageDecoder {
 //        out.add(msg);
 
         in.resetReaderIndex();
+//        in.resetWriterIndex();
         out.add(in.copy());
         in.clear();
+//        in.discardReadBytes();
+//        in.resetReaderIndex();
+//        in.resetWriterIndex();
+//        in.release();
     }
 }
