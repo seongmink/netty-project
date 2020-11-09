@@ -19,13 +19,11 @@ public class ClientHandler extends ChannelHandlerAdapter {
   // 소켓 채널이 최초 활성화 되었을 때 실행
   @Override
   public void channelActive(ChannelHandlerContext ctx) {
-    System.out.println("Client channelActive!");
-    System.out.println("클라이언트 파일 전송");
-    String filePath = "C:/test412321123125.exe";
+    log.info("Client channelActive!");
+    String filePath = "C:/test.png";
     File file = new File(filePath);
     if(file.length() == 0) {
-      System.out.println("해당 파일이 없습니다.");
-      
+      log.error("해당 파일이 없습니다.");
       return;
     }
     String result = "";
@@ -34,17 +32,29 @@ public class ClientHandler extends ChannelHandlerAdapter {
     try {
       is = new FileInputStream(file);
 
+      // 저장경로 설정
+      String saveDir = "C:/test11.png";
+
       // TODO: DATA 생성
       sb.append("CMD:=C\n")
               .append("FILENAME:=").append(file.getName()).append("\n")
               .append("ORGFILENAME:=").append(file.getName()).append("\n")
               .append("FILESIZE:=").append(file.length()).append("\n")
-              .append("SAVE_DIR:=").append("C:/test4123215.exe").append("\n");
+              .append("SAVE_DIR:=").append(saveDir).append("\n");
       result = sb.toString();
 
       String code = "FI";
 
       String length = Integer.toString(result.length() + code.length());
+
+      log.info("length = " + length);
+      log.info("code = " + code);
+      log.info("cmd = C");
+      log.info("fileName = " + file.getName());
+      log.info("orgFileName = " + file.getName());
+      log.info("fileSize = " + file.length());
+      log.info("saveDir = " + saveDir);
+      log.info("--------------------------------------------------");
       // TODO: 고정 8bytes Length
       byte[] arrL = new byte[8];
       byte[] tmpL = length.getBytes();
@@ -75,20 +85,20 @@ public class ClientHandler extends ChannelHandlerAdapter {
       int idx = e.toString().lastIndexOf('(');
       String tmpE = e.toString().split(":")[0];
       String exception = e.toString().substring(idx);
-      System.out.println(tmpE + " " + exception);
+      log.error(tmpE + " " + exception);
     }
   }
 
   // 서버로부터 수신된 데이터가 있을 때 호출
   @Override
   public void channelRead(ChannelHandlerContext ctx, Object msg) {
-    System.out.println("Client channelRead!");
+    log.info("Client channelRead!");
     byte[] bytes = (byte[]) msg;
     ByteBuf buf = Unpooled.wrappedBuffer(bytes);
 //      ByteBuf buf = (ByteBuf) msg;
     if (bytes.length < 10) {
-
-      System.out.println("서버의 응답 형식이 잘못되었습니다.");
+      log.error("서버의 응답 형식이 잘못되었습니다.");
+      log.info("--------------------------------------------------");
     }
     // 앞 8bytes 의 데이터 길이
     String length = "";
@@ -101,7 +111,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
 //        length += (char) bytes[i];
 //      }
     }
-    System.out.println("Length : " + length);
+    log.info("Length : " + length);
 
     // 구분코드 출력
 //    byte[] code = {bytes[8], bytes[9]};
@@ -109,7 +119,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
     for (int i = 0; i < 2; i++) {
       code[i] = buf.readByte();
     }
-    System.out.println("구분코드 : " + new String(code));
+    log.info("구분코드 : " + new String(code));
 
 
     // 데이터 출력
@@ -119,12 +129,15 @@ public class ClientHandler extends ChannelHandlerAdapter {
       data[i] = buf.readByte();
 //      data[i] = bytes[i+10];
     }
-    System.out.println("Data : " + new String(data));
+    log.info("Data : " + new String(data));
+    log.info("--------------------------------------------------");
   }
 
   @Override
   public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-    System.out.println("Client exceptionCaught!");
+    log.error("Client exceptionCaught!");
+    log.error(cause.toString());
+    log.info("--------------------------------------------------");
     cause.printStackTrace();
     ctx.close();
   }

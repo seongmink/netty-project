@@ -21,7 +21,7 @@ public class ClientMain {
                     .option(ChannelOption.SO_KEEPALIVE, true)
                     .handler(new ClientInitializer());
 
-//      String ip = "172.21.25.48";
+//      String ip = "172.21.25.36";
             String ip = "127.0.0.1";
             int port = 8888;
             ChannelFuture f = b.connect(ip, port).sync();
