@@ -16,8 +16,7 @@ public class ServerHandler extends ChannelHandlerAdapter {
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		log.info("--------------------------------------------------");
-		log.info("Server channelRead");
+		log.info("Server channelRead!");
 
 		ByteBuf buf = (ByteBuf) msg;
 
@@ -53,6 +52,7 @@ public class ServerHandler extends ChannelHandlerAdapter {
 		log.info("fileSize = " + fileSize);
 		String saveDir = st.nextToken().split("=")[1];
 		log.info("saveDir = " + saveDir);
+		log.info("--------------------------------------------------");
 
 		// TODO : 파일 저장
 		int size = buf.readableBytes();
@@ -77,9 +77,12 @@ public class ServerHandler extends ChannelHandlerAdapter {
 			byte[] resultData = saveDir.getBytes();
 			resultLength = LENGTH + CODE_LENGTH + saveDir.length();
 			result = new byte[resultLength];
+			log.info("Result length = " + resultLength);
 
 			result[8] = 'O';
 			result[9] = 'K';
+			log.info("Result code = OK");
+			log.info("Result dataLength = " + resultData.length);
 			System.arraycopy(resultLengthByte, 0, result, LENGTH - resultLengthByte.length, resultLengthByte.length);
 			System.arraycopy(resultData, 0, result, LENGTH + CODE_LENGTH, resultData.length);
 		} catch (Exception e) {
@@ -95,6 +98,8 @@ public class ServerHandler extends ChannelHandlerAdapter {
 
 			result[8] = 'N';
 			result[9] = 'O';
+			log.info("Result code = NO");
+			log.info("Result dataLength = " + resultData.length);
 			System.arraycopy(resultLengthByte, 0, result, LENGTH - resultLengthByte.length, resultLengthByte.length);
 			System.arraycopy(resultData, 0, result, LENGTH + CODE_LENGTH, resultData.length);
 			log.error(e.toString());
