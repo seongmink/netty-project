@@ -1,0 +1,2 @@
+2020-11-09 11:01:48,333 INFO  [main] server.ServerMain (AbstractLogger.java:382)     - ss
+2020-11-09 11:01:51,640 INFO  [main] client.ClientMain (AbstractLogger.java:382)     - 테스트테스트
