@@ -20,7 +20,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
   @Override
   public void channelActive(ChannelHandlerContext ctx) {
     log.info("Client channelActive!");
-    String filePath = "C:/test.png";
+    String filePath = "C:/daki.exe";
     File file = new File(filePath);
     if(file.length() == 0) {
       log.error("해당 파일이 없습니다.");
@@ -33,7 +33,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
       is = new FileInputStream(file);
 
       // 저장경로 설정
-      String saveDir = "C:/test11.png";
+      String saveDir = "C:/daki2.exe";
 
       // TODO: DATA 생성
       sb.append("CMD:=C\n")
