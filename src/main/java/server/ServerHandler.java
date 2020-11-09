@@ -82,7 +82,7 @@ public class ServerHandler extends ChannelHandlerAdapter {
 		} catch (Exception e) {
 
 			String exception = e.toString();
-			String exceptionName = exception.split("\\(")[0];
+			String exceptionName = exception.split(" ")[0];
 			String description = exception.substring(exception.lastIndexOf('(') + 1, exception.length() - 1);
 
 			byte[] resultLengthByte = String.valueOf(CODE_LENGTH + exceptionName.length() + description.getBytes().length).getBytes();
@@ -97,7 +97,6 @@ public class ServerHandler extends ChannelHandlerAdapter {
 			e.printStackTrace();
 		} finally {
 			ByteBuf byteBuf = Unpooled.wrappedBuffer(result);
-			System.out.println("byteBuf.toString() = " + byteBuf.toString());
 			ctx.writeAndFlush(byteBuf);
 		}
 	}

@@ -49,7 +49,6 @@ public class ClientHandler extends ChannelHandlerAdapter {
       byte[] arrL = new byte[8];
       byte[] tmpL = length.getBytes();
       System.arraycopy(tmpL, 0, arrL, arrL.length - tmpL.length, tmpL.length);
-      System.out.println(Arrays.toString(arrL));
 
       // TODO: 구분코드 2bytes
       byte[] arrC = code.getBytes();
@@ -103,7 +102,6 @@ public class ClientHandler extends ChannelHandlerAdapter {
 //      }
     }
     System.out.println("Length : " + length);
-
 
     // 구분코드 출력
 //    byte[] code = {bytes[8], bytes[9]};
