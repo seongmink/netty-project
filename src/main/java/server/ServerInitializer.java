@@ -10,7 +10,7 @@ public class ServerInitializer extends ChannelInitializer<SocketChannel> {
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline p = ch.pipeline();
-        p.addLast(new ConnectionHandler());
+//        p.addLast(new ConnectionHandler());
         p.addLast(new DaouDecoder());
         p.addLast(new ServerHandler());
         p.addLast(new ByteArrayEncoder());

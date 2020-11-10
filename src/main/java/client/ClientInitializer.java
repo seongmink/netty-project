@@ -8,11 +8,11 @@ import io.netty.handler.codec.bytes.ByteArrayEncoder;
 
 public class ClientInitializer extends ChannelInitializer<SocketChannel> {
 
-  protected void initChannel(SocketChannel ch) throws Exception {
-    ChannelPipeline p = ch.pipeline();
-    p.addLast(new ByteArrayDecoder());
-    p.addLast(new ClientHandler());
-    p.addLast(new ByteArrayEncoder());
-  }
+	protected void initChannel(SocketChannel ch) throws Exception {
+		ChannelPipeline p = ch.pipeline();
+		p.addLast(new ByteArrayDecoder());
+		p.addLast(new ClientHandler());
+		p.addLast(new ByteArrayEncoder());
+	}
 
 }

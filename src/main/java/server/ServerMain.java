@@ -20,7 +20,8 @@ public class ServerMain {
             ServerBootstrap sb = new ServerBootstrap();
             sb.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class) // 새로운 채널을 객체화 하는 클래스 지정
-                    .childHandler(new ServerInitializer()).option(ChannelOption.SO_BACKLOG, 128)
+                    .childHandler(new ServerInitializer())
+//                    .option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
             int port = 8888;
