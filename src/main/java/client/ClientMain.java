@@ -25,7 +25,7 @@ public class ClientMain {
 			String ip = "127.0.0.1";
 			int port = 8888;
 			ChannelFuture f = b.connect(ip, port).sync();
-			System.out.println("Client Start : " + ip + ":" + port);
+//			System.out.println("Client Start : " + ip + ":" + port);
 			f.channel().closeFuture().sync();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
