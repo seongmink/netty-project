@@ -14,14 +14,14 @@ public class ServerMain {
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
 
         // 연결된 클라이언트 소켓으로부터 데이터 입출력(I/O) 및 이벤트처리를 담당하는 자식 쓰레드 그룹
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        EventLoopGroup workerGroup = new NioEventLoopGroup(8);
         try {
             // ServerBootstrap 클래스를 사용하면 서버에서 Channel을 직접 세팅 할 수 있음
             ServerBootstrap sb = new ServerBootstrap();
             sb.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class) // 새로운 채널을 객체화 하는 클래스 지정
                     .childHandler(new ServerInitializer())
-//                    .option(ChannelOption.SO_BACKLOG, 128)
+                    .option(ChannelOption.SO_BACKLOG, 50)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
             int port = 8888;

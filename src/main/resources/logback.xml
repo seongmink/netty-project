@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 seconds">
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%highlight(%-5level)] --- [ %thread{10} ] %cyan(%logger{20}) : %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>D:/netty-project-log/logfile.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] --- [ %thread{10} ] %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="src.main" level="info"/>
+
+    <root level="info">
+        <appender-ref ref="CONSOLE"/> <!-- Console에 로그를 출력하고자 할 때 사용 -->
+        <appender-ref ref="FILE"/> <!-- File로 로그를 남기고자 할 때 사용 -->
+    </root>
+</configuration>
+
+<!--
+# 로깅 레벨
+ - FATAL : 가장 크리티컬한 에러가 발생했을 때
+ - ERROR : 일반적인 에러가 발생했을 때
+ - WARN : 에러는 아니지만 주의가 필요할 때
+ - INFO : 일반적인 정보가 필요할 때
+ - DEBUG : 일반적인 정보를 상세히 나타낼 때
+ - TRACE : DEBUG로만 정보들을 세하게 나타내기 부족할 때
+## 우선 순위 : FATAL > ERROR > WARN > INFO > DEBUG > TRACE
+   - FATAL이 가장 높고 DEBUG가 가장 낮음(WARN으로 설정하면 FATAL, ERROR, WARN)만 출력
+
+# DataPattern 설정
+ - 매달 갱신 : yyyy-MM
+ - 매주 갱신 : yyyy-MM-ww
+ - 매일 갱신 : yyyy-MM-dd
+ - 12시간 갱신 : yyyy-MM-dd-a
+ - 매시간 갱신 : yyyy-MM-dd-HH
+ - 매분 갱신 : yyyy-MM-dd-HH-mm
+-->
