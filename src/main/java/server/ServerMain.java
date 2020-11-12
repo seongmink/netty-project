@@ -7,9 +7,11 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.util.ResourceLeakDetector;
 
 public class ServerMain {
     public static void main(String[] args) {
+        ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.ADVANCED);
         // 클라이언트의 연결을 수락하는 부모 스레드 그룹
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
 
