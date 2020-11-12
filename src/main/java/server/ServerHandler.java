@@ -3,6 +3,8 @@ package server;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
+import io.netty.util.ReferenceCountUtil;
+import io.netty.util.ResourceLeakDetector;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -105,6 +107,7 @@ public class ServerHandler extends ChannelHandlerAdapter {
 			e.printStackTrace();
 		} finally {
 			ByteBuf byteBuf = Unpooled.wrappedBuffer(result);
+			ReferenceCountUtil.releaseLater(buf);
 			ctx.writeAndFlush(byteBuf);
 		}
 	}

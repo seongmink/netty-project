@@ -4,6 +4,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.util.ReferenceCountUtil;
+import io.netty.util.ResourceLeakDetector;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 
@@ -21,7 +23,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) {
 		log.info("Client channelActive!");
-		String filePath = "C:/test.txt";
+		String filePath = "D:/test1.xlsx";
 		File file = new File(filePath);
 		if (file.length() == 0) {
 			log.error("해당 파일이 없습니다.");
@@ -34,7 +36,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
 			is = new FileInputStream(file);
 
 			// 저장경로 설정
-			String saveDir = "C:/test_" + cnt++ + ".txt";
+			String saveDir = "D:/test1/test1_" + cnt++ + ".xlsx";
 
 			// TODO: DATA 생성
 			sb.append("CMD:=C\n")
@@ -82,6 +84,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
 			// write : 채널에 데이터를 기록
 			// flush : 채널에 기록된 데이터를 서버로 전송
 			ctx.writeAndFlush(byteBuf);
+			ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.ADVANCED);
 		} catch (Exception e) {
 			int idx = e.toString().lastIndexOf('(');
 			String tmpE = e.toString().split(":")[0];
@@ -132,6 +135,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
 		}
 		log.info("Data : " + new String(data));
 		log.info("--------------------------------------------------");
+		ReferenceCountUtil.releaseLater(buf);
 		ctx.close();
 	}
 
