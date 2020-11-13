@@ -21,7 +21,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) {
 		log.info("Client channelActive!");
-		String filePath = "D:/test1.xlsx";
+		String filePath = "D:/test1.txt";
 		File file = new File(filePath);
 		if (file.length() == 0) {
 			log.error("해당 파일이 없습니다.");
@@ -34,7 +34,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
 			is = new FileInputStream(file);
 
 			// 저장경로 설정
-			String saveDir = "D:/test1/test1_" + cnt++ + ".xlsx";
+			String saveDir = "D:/test1/test1_" + cnt++ + ".txt";
 
 			// TODO: DATA 생성
 			sb.append("CMD:=C\n")
