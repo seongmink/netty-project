@@ -22,7 +22,9 @@
 
     <root level="info">
         <!-- Console에 로그를 출력하고자 할 때 사용 -->
+        <!--
         <appender-ref ref="CONSOLE"/>
+        -->
         <!-- File로 로그를 남기고자 할 때 사용 -->
         <appender-ref ref="FILE"/>
     </root>
