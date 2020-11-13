@@ -96,7 +96,6 @@ public class ClientHandler extends ChannelHandlerAdapter {
 		log.info("Client channelRead!");
 		byte[] bytes = (byte[]) msg;
 		ByteBuf buf = Unpooled.wrappedBuffer(bytes);
-//      ByteBuf buf = (ByteBuf) msg;
 		if (bytes.length < 10) {
 			log.error("서버의 응답 형식이 잘못되었습니다.");
 			log.info("--------------------------------------------------");
@@ -108,14 +107,10 @@ public class ClientHandler extends ChannelHandlerAdapter {
 			if (chk != 0) {
 				length += (char) chk;
 			}
-//      if((char) bytes[i] != 0) {
-//        length += (char) bytes[i];
-//      }
 		}
 		log.info("Length : " + length);
 
 		// 구분코드 출력
-//    byte[] code = {bytes[8], bytes[9]};
 		byte[] code = new byte[2];
 		for (int i = 0; i < 2; i++) {
 			code[i] = buf.readByte();
@@ -128,7 +123,6 @@ public class ClientHandler extends ChannelHandlerAdapter {
 		byte[] data = new byte[tmp];
 		for (int i = 0; i < tmp; i++) {
 			data[i] = buf.readByte();
-//      data[i] = bytes[i+10];
 		}
 		log.info("Data : " + new String(data));
 		log.info("--------------------------------------------------");
