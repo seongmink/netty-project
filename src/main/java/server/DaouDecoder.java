@@ -49,6 +49,7 @@ public class DaouDecoder extends ByteToMessageDecoder {
             return;
         }
 
+        // ByteBuf to byte[]
 //        byte[] msg;
 //        if(in.hasArray()) { // heap 버퍼일 경우
 //            msg = in.array();
@@ -59,12 +60,7 @@ public class DaouDecoder extends ByteToMessageDecoder {
 //        out.add(msg);
 
         in.resetReaderIndex();
-//        in.resetWriterIndex();
         out.add(in.copy());
         in.clear();
-//        in.discardReadBytes();
-//        in.resetReaderIndex();
-//        in.resetWriterIndex();
-//        in.release();
     }
 }

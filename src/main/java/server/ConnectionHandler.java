@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ConnectionHandler extends ChannelHandlerAdapter {
 
 	private final AtomicInteger connections = new AtomicInteger();
-	private final int max = 1000; // 최대 100명까지만 접속 허용
+	private final int max = 1000; // 최대 접속 허용 인원 수
 	
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
