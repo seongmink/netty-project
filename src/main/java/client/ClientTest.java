@@ -9,10 +9,10 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class ClientTest1 {
+public class ClientTest {
 
 	@Test
-	public void ClientTestSetUp() {
+	public void ClientTest() {
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		try {
 			Bootstrap b = new Bootstrap();
